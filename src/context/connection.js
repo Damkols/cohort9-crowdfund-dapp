@@ -6,122 +6,122 @@ import { ethers } from "ethers";
 const Connection = createContext();
 
 const ConnectionProvider = ({ children }) => {
-    const [account, setAccount] = useState();
-    const [chainId, setChainId] = useState();
-    const [isActive, setIsActive] = useState(false);
-    const [provider, setProvider] = useState(getReadOnlyProvider());
+ const [account, setAccount] = useState();
+ const [chainId, setChainId] = useState();
+ const [isActive, setIsActive] = useState(false);
+ const [provider, setProvider] = useState(getReadOnlyProvider());
 
-    const connect = async () => {
-        if (window.ethereum === undefined)
-            return alert("not an ethereum-enabled browser");
-        try {
-            return window.ethereum.request({
-                method: "eth_requestAccounts",
-            });
-        } catch (error) {
-            console.log("error: ", error);
-        }
-    };
+ const contractAddress = "0x46f44F2D1af04D54ab5BCbEF9F4D0Df9baDc1B8C";
 
-    const handleAccountChanged = async (accounts) => {
-        if (!accounts.length) {
-            setAccount(undefined);
-            setChainId(undefined);
-            setIsActive(false);
-            return setProvider(getReadOnlyProvider());
-        }
-        const chain = await window.ethereum.request({
-            method: "eth_chainId",
-        });
+ const connect = async () => {
+  if (window.ethereum === undefined)
+   return alert("not an ethereum-enabled browser");
+  try {
+   return window.ethereum.request({
+    method: "eth_requestAccounts",
+   });
+  } catch (error) {
+   console.log("error: ", error);
+  }
+ };
 
-        setAccount(accounts[0]);
-        setChainId(Number(chain));
-        if (isSupportedChain(chain)) {
-            setIsActive(true);
-            setProvider(new ethers.BrowserProvider(window.ethereum));
-        } else {
-            setProvider();
-            setIsActive(false);
-            setProvider(getReadOnlyProvider());
-        }
-    };
+ const handleAccountChanged = async (accounts) => {
+  if (!accounts.length) {
+   setAccount(undefined);
+   setChainId(undefined);
+   setIsActive(false);
+   return setProvider(getReadOnlyProvider());
+  }
+  const chain = await window.ethereum.request({
+   method: "eth_chainId",
+  });
 
-    const handleChainChanged = (chain) => {
-        setChainId(Number(chain));
-        if (isSupportedChain(chain)) {
-            setIsActive(true);
-            setProvider(new ethers.BrowserProvider(window.ethereum));
-        } else {
-            setIsActive(false);
-            setProvider(getReadOnlyProvider());
-        }
-    };
+  setAccount(accounts[0]);
+  setChainId(Number(chain));
+  if (isSupportedChain(chain)) {
+   setIsActive(true);
+   setProvider(new ethers.BrowserProvider(window.ethereum));
+  } else {
+   setProvider();
+   setIsActive(false);
+   setProvider(getReadOnlyProvider());
+  }
+ };
 
-    const eagerlyConnect = async () => {
-        if (window.ethereum === undefined) return;
-        const accounts = await window?.ethereum?.request({
-            method: "eth_accounts",
-        });
+ const handleChainChanged = (chain) => {
+  setChainId(Number(chain));
+  if (isSupportedChain(chain)) {
+   setIsActive(true);
+   setProvider(new ethers.BrowserProvider(window.ethereum));
+  } else {
+   setIsActive(false);
+   setProvider(getReadOnlyProvider());
+  }
+ };
 
-        if (!accounts.length) return;
+ const eagerlyConnect = async () => {
+  if (window.ethereum === undefined) return;
+  const accounts = await window?.ethereum?.request({
+   method: "eth_accounts",
+  });
 
-        handleAccountChanged(accounts);
-    };
+  if (!accounts.length) return;
 
-    useEffect(() => {
-        if (window.ethereum === undefined) return;
-        eagerlyConnect();
-        window.ethereum.on("chainChanged", handleChainChanged);
+  handleAccountChanged(accounts);
+ };
 
-        window.ethereum.on("accountsChanged", handleAccountChanged);
+ useEffect(() => {
+  if (window.ethereum === undefined) return;
+  eagerlyConnect();
+  window.ethereum.on("chainChanged", handleChainChanged);
 
-        return () => {
-            window.ethereum.removeListener(
-                "accountsChanged",
-                handleAccountChanged
-            );
+  window.ethereum.on("accountsChanged", handleAccountChanged);
 
-            window.ethereum.removeListener("chainChanged", handleChainChanged);
-        };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  return () => {
+   window.ethereum.removeListener("accountsChanged", handleAccountChanged);
 
-    const switchToChain = async (chain) => {
-        if (!isSupportedChain(chain))
-            return alert("attempt to switch to a wrong chain!");
-        try {
-            await window.ethereum.request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: `0x${chain.toString(16)}` }],
-            });
-        } catch (error) {
-            if (error.code === 4902 || error.code === -32603) {
-                const chainInfo = networkInfoMap[chain];
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_addEthereumChain",
-                        params: [chainInfo],
-                    });
-                } catch (addError) {
-                    alert("you rejected network addition!");
-                }
-            }
-        }
-    };
+   window.ethereum.removeListener("chainChanged", handleChainChanged);
+  };
+ }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <Connection.Provider
-            value={{
-                account,
-                chainId,
-                isActive,
-                provider,
-                connect,
-                switchToChain,
-            }}
-        >
-            {children}
-        </Connection.Provider>
-    );
+ const switchToChain = async (chain) => {
+  if (!isSupportedChain(chain))
+   return alert("attempt to switch to a wrong chain!");
+  try {
+   await window.ethereum.request({
+    method: "wallet_switchEthereumChain",
+    params: [{ chainId: `0x${chain.toString(16)}` }],
+   });
+  } catch (error) {
+   if (error.code === 4902 || error.code === -32603) {
+    const chainInfo = networkInfoMap[chain];
+    try {
+     await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [chainInfo],
+     });
+    } catch (addError) {
+     alert("you rejected network addition!");
+    }
+   }
+  }
+ };
+
+ return (
+  <Connection.Provider
+   value={{
+    account,
+    chainId,
+    isActive,
+    provider,
+    connect,
+    switchToChain,
+    contractAddress,
+   }}
+  >
+   {children}
+  </Connection.Provider>
+ );
 };
 
 export const useConnection = () => useContext(Connection);
