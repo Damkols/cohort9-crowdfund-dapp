@@ -1,15 +1,11 @@
-/* Sample CSS Styling */
 .campaign-list {
- margin: 20px;
+ margin: 1px;
 }
 
 .campaign-grid {
  display: grid;
- grid-template-columns: repeat(
-  3,
-  1fr
- ); /* Adjust the number for desired columns */
- gap: 20px; /* Adjust the gap between grid items */
+ grid-template-columns: repeat(3, 1fr);
+ gap: 20px;
  list-style: none;
  padding: 0;
 }
