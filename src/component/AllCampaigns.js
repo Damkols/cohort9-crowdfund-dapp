@@ -18,16 +18,12 @@ const AllCampaigns = () => {
       <p className="campaign-info">ID: {campaign.id}</p>
       <p className="campaign-info">Funding Goal: {campaign.fundingGoal}</p>
       <p className="campaign-info">Owner: {campaign.owner}</p>
-      <p className="campaign-info">Duration: {campaign.durationTime}</p>
+      <p className="campaign-info">Duration: {campaign.durationTime} days</p>
       <p className="campaign-info">
        Active: {campaign.isActive ? "Yes" : "No"}
       </p>
       <p className="campaign-info">
        Funding Balance: {campaign.fundingBalance}
-      </p>
-      <p className="campaign-info">
-       Contributors:{" "}
-       {campaign.contributors ? campaign.contributors.join(", ") : "None"}
       </p>
      </li>
     ))}

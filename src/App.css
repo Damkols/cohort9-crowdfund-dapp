@@ -1,27 +1,38 @@
 .campaign-list {
- margin: 1px;
+ margin: 10px;
+ width: 90% auto;
+ margin: 0 10%;
 }
 
 .campaign-grid {
  display: grid;
  grid-template-columns: repeat(3, 1fr);
- gap: 20px;
+ gap: 50px;
  list-style: none;
  padding: 0;
 }
 
 .campaign-card {
- background-color: #f4f4f4;
+ background-color: #f0f0f0;
  padding: 20px;
- border-radius: 5px;
- box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+ border-radius: 15px;
+ box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2),
+  -5px -5px 15px rgba(255, 255, 255, 0.7);
+ transition: transform 0.3s ease-in-out;
+}
+
+.campaign-card:hover {
+ transform: scale(1.05);
 }
 
 .campaign-title {
  font-size: 1.2rem;
  margin: 0;
+ color: #cd2f0b;
+ text-transform: uppercase;
 }
 
 .campaign-info {
  margin: 5px 0;
+ color: #074167;
 }

@@ -9,6 +9,7 @@ const useGetAllCampaigns = () => {
  const { provider, contractAddress } = useConnection();
  const campaignNo = useCampaignNo();
 
+ console.log(campaignNo);
  useEffect(() => {
   const fetchAllCampaigns = async () => {
    try {
@@ -20,11 +21,11 @@ const useGetAllCampaigns = () => {
        return {
         id,
         title: details.title,
-        fundingGoal: details.fundingGoal,
+        fundingGoal: Number(details.fundingGoal),
         owner: details.owner,
-        durationTime: details.durationTime,
+        durationTime: Math.round(Number(details.durationTime) / 86400),
         isActive: details.isActive,
-        fundingBalance: details.fundingBalance,
+        fundingBalance: Number(details.fundingBalance),
         contributors: details.contributors,
        };
       }
