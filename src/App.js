@@ -1,6 +1,8 @@
+import AllCampaigns from "./component/AllCampaigns";
 import CampaignNo from "./component/CampaignNo";
 import CreateCampaign from "./component/CreateCampaign";
 import Header from "./component/Header";
+import "./App.css";
 
 function App() {
  return (
@@ -10,6 +12,7 @@ function App() {
     <CreateCampaign />
    </main>
    <CampaignNo />
+   <AllCampaigns />
   </div>
  );
 }
